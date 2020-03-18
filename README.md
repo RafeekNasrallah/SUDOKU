@@ -6,6 +6,6 @@ or give his own sudoko and the app will solve it
 
 
 how to run it: simply compile the code in sudo.py -> 
-´´´
+```
 python sudo.py
-´´´
+```
