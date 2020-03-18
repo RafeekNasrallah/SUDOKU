@@ -199,7 +199,15 @@ def dosuditerative(mat): # iterative version, simple backtracking (bruteforce :)
                 i = i + 1
             else:
                 j = j + 1
+"""
+frame1 is the main frame, where you can see the given matrix and where you can try to solve it (changing the global variable matrix will change the sudoko game on frame 1
+frame2 is the solution of the given matrix
+frame3 is the frame where the user can give his own matrix and then the program will solve it for him
+frame4 is where he will be able to see the soluton of the matrix he gave
 
+
+NOTE: its my first time doing gui :$
+"""
 
 def raise_frame2(frame):
     frame.tkraise()
