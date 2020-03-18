@@ -244,17 +244,17 @@ def checksol(matri):
             tempo[i][j] = 0
             if findrows(tempo,j,c):
                 bool = False
-                info1="wrong row" + str(j)
+                info1="wrong row: " + str(j)
                 showinfo("Window", info1)
                 return
             if findcols(tempo,i,c):
                 bool = False
-                info2="wrong col" + str(i)
+                info2="wrong col: " + str(i)
                 showinfo("Window", info2)
                 return
             if searchblock(tempo,findblock(i,j),c):
                 bool = False
-                info3="wrong block" + str(findblock(i,j))
+                info3="wrong block: " + str(findblock(i,j))
                 showinfo("Window", info3)
                 return
             tempo[i][j] = c
