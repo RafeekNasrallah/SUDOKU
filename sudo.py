@@ -129,9 +129,8 @@ def searchblock(a, block, num): # take a matrix, a block number and a number, re
         return False
 
 
-def sudorecursive(w): # the main recursive sudoko solver with back tracking!
+def sudorecursive(a): # the main recursive sudoko solver with back tracking!
     global solved
-    a = w
     for i in range(9):
         for j in range(9):
               if a[i][j] == 0:
@@ -143,7 +142,6 @@ def sudorecursive(w): # the main recursive sudoko solver with back tracking!
                         a[i][j] = 0
                 return
     solved = deepcopy(a)
-    #print(solved)
 
 def dosuditerative(mat): # iterative version, simple backtracking (bruteforce :) ) but its nice
     temp=mat
