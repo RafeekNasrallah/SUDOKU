@@ -22,7 +22,7 @@ initmatrix = [[0,0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0,0]]
 
-
+solved = []
 
 def findrows(a, row, num): # gets matrix, row number, and a number, finds whether this number exits in this
     x = 0
@@ -129,38 +129,21 @@ def searchblock(a, block, num): # take a matrix, a block number and a number, re
         return False
 
 
-def dosoduko(a, i, j, counter, dict): # solves the sudoku recursive, doesnt work on hard sudokus, due to 100000000000000000000000 recursive calls :(
-    if i>8 or j>8:
-        return a
-    if a[i][j] == 0:
-        counter = counter + 1
-        while counter <= 9:
-            if (findcols(a, i, counter) == False) and (findrows(a, j, counter) == False) and (
-                    searchblock(a, findblock(i, j), counter) == False):
-                a[i][j] = counter
-                dict.append((i, j, counter))
-                if j == 8:
-                    j = 0
-                    i = i + 1
-                else:
-                    j = j + 1
-                if i>8 or j > 8:
-                        return a
-                while a[i][j] != 0:
-                    if j == 8:
-                        j = 0
-                        i = i + 1
-                    else:
-                        j = j + 1
-                dosoduko(a, i, j, 0, dict)
-                break
-            counter = counter + 1
-        if counter > 9:
-            (iold, jold, counterold) = dict.pop()
-            a[iold][jold] = 0
-            dosoduko(a, iold, jold, counterold, dict)
-
-
+def sudorecursive(w): # the main recursive sudoko solver with back tracking!
+    global solved
+    a = w
+    for i in range(9):
+        for j in range(9):
+              if a[i][j] == 0:
+                for temp in range(1,10):
+                    if not (findcols(a, i, temp)) and not (findrows(a, j, temp)) and not (
+                    searchblock(a, findblock(i, j), temp)):
+                        a[i][j] = temp
+                        sudorecursive(a)
+                        a[i][j] = 0
+                return
+    solved = deepcopy(a)
+    #print(solved)
 
 def dosuditerative(mat): # iterative version, simple backtracking (bruteforce :) ) but its nice
     temp=mat
@@ -170,9 +153,8 @@ def dosuditerative(mat): # iterative version, simple backtracking (bruteforce :)
     counter = 1
     while j < 9 and i < 9:
         if temp[i][j] == 0:
-            if (findcols(temp, i, counter) == False) and (findrows(temp, j, counter) == False) and (
-                    searchblock(temp, findblock(i, j), counter) == False) and counter <= 9:
-
+            if not (findcols(temp, i, counter)) and not (findrows(temp, j, counter)) and not (
+                    searchblock(temp, findblock(i, j), counter)) and counter <= 9:
                 temp[i][j] = counter
                 oldi = i
                 oldj = j
@@ -211,14 +193,14 @@ NOTE: its my first time doing gui :$
 
 def raise_frame2(frame):
     frame.tkraise()
-    dosuditerative(original)
+    sudorecursive(original)
     for i in range(9):
         for j in range(9):
             if (i,j) in tuples:
-                l2 = Label(f2, text=str(original[i][j]), font='Helvetica 17 bold',foreground="red")
+                l2 = Label(f2, text=str(solved[i][j]), font='Helvetica 17 bold',foreground="red")
                 l2.grid(row=i, column=j,padx=24, pady=3,ipady=3)
             else:
-                l2 = Label(f2, text=str(original[i][j]), font='Helvetica 17 bold')
+                l2 = Label(f2, text=str(solved[i][j]), font='Helvetica 17 bold')
                 l2.grid(row=i, column=j, padx=24, pady=3, ipady=3)
     b7 =Button(f2, text = 'Back!', command= lambda:raise_frame1(f1))
     b7.grid(row=9,column=5)
@@ -272,7 +254,7 @@ def raise_frame1(f1):
 def calculate():
     k = 0
     tuples3 = []
-    tempmat = deepcopy( initmatrix)
+    tempmat = deepcopy(initmatrix)
     for i in range(9):
         for j in range(9):
             n = txtboxs[k]
@@ -280,9 +262,7 @@ def calculate():
                 tempmat[i][j]=int(n.get())
                 tuples3.append((i,j))
             k = k + 1
-    print(tempmat)
-    dosuditerative(tempmat)
-    print(tempmat)
+    sudorecursive(tempmat)
     f4 = Frame(master)
     f4.grid(row=0, column=0, sticky='news')
     b5 =Button(f4, text = 'Back!', command= lambda:raise_frame1(f1))
@@ -290,12 +270,13 @@ def calculate():
     for i in range(9):
         for j in range(9):
             if (i, j) in tuples3:
-                l2 = Label(f4, text=str(tempmat[i][j]), font='Helvetica 17 bold', foreground="red")
+                l2 = Label(f4, text=str(solved[i][j]), font='Helvetica 17 bold', foreground="red")
                 l2.grid(row=i, column=j, padx=24, pady=3, ipady=3)
             else:
-                l2 = Label(f4, text=str(tempmat[i][j]), font='Helvetica 17 bold')
+                l2 = Label(f4, text=str(solved[i][j]), font='Helvetica 17 bold')
                 l2.grid(row=i, column=j, padx=24, pady=3, ipady=3)
     f4.tkraise()
+
 
 
 
@@ -352,3 +333,5 @@ b6.grid(row=9,column=4)
 
 raise_frame2(f1)
 mainloop()
+
+
